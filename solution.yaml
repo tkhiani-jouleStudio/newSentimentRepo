@@ -3,7 +3,7 @@ kind: Solution
 
 metadata:
   name: feedback-sentiment-agent-2e242
-  version: 1.0.0
+  version: 2.0.0
   description: AI agent that analyzes customer feedback, classifies sentiment as positive, negative, or neutral, and generates a concise summary.
 
 assets:
