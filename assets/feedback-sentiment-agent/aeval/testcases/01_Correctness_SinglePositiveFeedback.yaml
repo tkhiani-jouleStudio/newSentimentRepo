@@ -1,0 +1,36 @@
+id: 01_Correctness_SinglePositiveFeedback
+description: >
+  Happy path UJ-01 — agent classifies a single clearly positive feedback item and
+  returns both a CLASSIFICATIONS section and a SUMMARY.
+tags:
+  - correctness
+  - goal_completion
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a feedback analyst. You want to analyse a single piece of customer
+        feedback to understand its sentiment.
+        Known information: the feedback text is "The onboarding experience was
+        fantastic — the team was incredibly helpful and everything went smoothly."
+        Unknown information: you do not know the classification in advance.
+        Submit the single feedback item and wait for the result.
+      initial_message: >
+        Please analyse this feedback: "The onboarding experience was fantastic —
+        the team was incredibly helpful and everything went smoothly."
+    max_turns: 3
+    agent_response_validations:
+      - check: >
+          The response contains a CLASSIFICATIONS section that assigns a positive
+          sentiment label to the feedback about the onboarding experience.
+      - check: >
+          The response contains a SUMMARY section that reflects a positive overall
+          sentiment about the onboarding experience.
+      - check: >
+          The reason given for the classification references something from the
+          feedback text — such as the team being helpful or the process going smoothly
+          — rather than being a generic placeholder statement.
+    rule_compliance_validations:
+      - check: >
+          The agent does not add themes or details to the summary that were not
+          present in the submitted feedback text.

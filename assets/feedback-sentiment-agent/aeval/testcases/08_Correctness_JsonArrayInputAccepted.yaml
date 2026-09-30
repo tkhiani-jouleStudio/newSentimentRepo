@@ -1,0 +1,33 @@
+id: 08_Correctness_JsonArrayInputAccepted
+description: >
+  Checks that the agent correctly processes multiple feedback items submitted
+  as a JSON array, returning a classification for each item.
+tags:
+  - correctness
+  - uiux
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a feedback analyst integrating the agent into a downstream system.
+        You submit two feedback items encoded as a JSON array.
+        Known information: the JSON input is:
+          ["The new feature is exactly what we needed!", "Setup instructions are
+           confusing and incomplete."]
+        Unknown information: you do not know whether the agent will parse the array
+        correctly.
+        Submit the JSON array and verify that both items are individually classified.
+      initial_message: >
+        ["The new feature is exactly what we needed!", "Setup instructions are confusing and incomplete."]
+    max_turns: 3
+    agent_response_validations:
+      - check: >
+          The CLASSIFICATIONS section contains exactly two entries corresponding to
+          the two submitted feedback items.
+      - check: >
+          The feedback about the new feature is classified as positive.
+      - check: >
+          The feedback about confusing setup instructions is classified as negative.
+      - check: >
+          The SUMMARY section reflects both the positive and negative sentiments
+          present in the two items.

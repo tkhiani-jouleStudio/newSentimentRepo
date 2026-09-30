@@ -1,0 +1,30 @@
+id: 03_Correctness_EmptyInputRejected
+description: >
+  Failure path UJ-03 — agent receives an empty input and returns an informative
+  error message without producing fabricated classifications or a summary.
+tags:
+  - correctness
+  - safety
+  - goal_completion
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a feedback analyst. You accidentally submit an empty message to the
+        agent with no feedback text.
+        Known information: you are sending an empty string.
+        Unknown information: you do not know the exact error wording.
+        Submit an empty message and observe the agent's response.
+      initial_message: ' '
+    max_turns: 2
+    agent_response_validations:
+      - check: >
+          The agent returns an error or informative message indicating that no
+          feedback was provided or the input was empty.
+      - check: >
+          The response does not contain a CLASSIFICATIONS or SUMMARY section with
+          invented or fabricated feedback content.
+    rule_compliance_validations:
+      - check: >
+          Because the input was empty, the agent MUST NOT return sentiment labels
+          for content that was never submitted.

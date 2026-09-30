@@ -1,0 +1,43 @@
+id: 10_BusinessOutcome_SentimentAccuracyTarget
+description: >
+  Business outcome — agent classifies five feedback items of known sentiment to
+  demonstrate 96% accuracy target behaviour. All five must be correctly labelled.
+tags:
+  - correctness
+  - business_outcome
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a quality assurance analyst running a validation check. You submit
+        five feedback items whose expected classifications are known in advance.
+        Known information:
+          1. "Best customer service I have ever experienced." — expected: positive
+          2. "The app crashes every time I try to export a report." — expected: negative
+          3. "Invoice #12345 was issued on 14 January." — expected: neutral
+          4. "Really impressed with how quickly the issue was resolved — thank you!" — expected: positive
+          5. "The product does not support multi-currency transactions." — expected: negative
+        Unknown information: you do not know the exact wording of the reasons given.
+        Submit all five items and verify that each is classified as expected.
+      initial_message: |
+        Please classify the following five feedback items:
+        1. "Best customer service I have ever experienced."
+        2. "The app crashes every time I try to export a report."
+        3. "Invoice #12345 was issued on 14 January."
+        4. "Really impressed with how quickly the issue was resolved — thank you!"
+        5. "The product does not support multi-currency transactions."
+    max_turns: 3
+    agent_response_validations:
+      - check: >
+          [BUSINESS_METRIC: Sentiment classification accuracy] The CLASSIFICATIONS
+          section assigns exactly five labels. Item 1 is positive, item 2 is negative,
+          item 3 is neutral, item 4 is positive, and item 5 is negative — reflecting
+          the 96% accuracy target for sentiment classification.
+      - check: >
+          The SUMMARY section reflects the mix of positive, negative, and neutral
+          sentiment across the five items and does not misrepresent the overall
+          distribution.
+    rule_compliance_validations:
+      - check: >
+          The agent assigns exactly one label per item and does not leave any of the
+          five items without a classification.

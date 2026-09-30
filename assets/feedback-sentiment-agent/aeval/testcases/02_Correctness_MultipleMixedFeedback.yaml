@@ -1,0 +1,45 @@
+id: 02_Correctness_MultipleMixedFeedback
+description: >
+  Happy path UJ-02 — agent receives three feedback items spanning all three sentiment
+  classes (positive, negative, neutral) and returns per-item classifications and a
+  balanced summary.
+tags:
+  - correctness
+  - goal_completion
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a customer experience manager. You have three pieces of customer
+        feedback to analyse.
+        Known information:
+          1. "Absolutely love the new dashboard — it saves me hours every week."
+          2. "The support response times are unacceptably slow. I waited 4 days for
+             a reply."
+          3. "The product was delivered on the expected date."
+        Unknown information: you do not know the individual classifications in advance.
+        Submit all three items together and wait for the structured result.
+      initial_message: |
+        Please analyse these three feedback items:
+        1. "Absolutely love the new dashboard — it saves me hours every week."
+        2. "The support response times are unacceptably slow. I waited 4 days for a reply."
+        3. "The product was delivered on the expected date."
+    max_turns: 3
+    agent_response_validations:
+      - check: >
+          The CLASSIFICATIONS section contains exactly three entries, one for each
+          submitted feedback item, each labelled positive, negative, or neutral.
+      - check: >
+          The first feedback item about the dashboard is classified as positive.
+      - check: >
+          The second feedback item about slow support response times is classified
+          as negative.
+      - check: >
+          The third feedback item about the delivery date is classified as neutral.
+      - check: >
+          The SUMMARY section mentions both the positive sentiment about the dashboard
+          and the negative sentiment about support response times.
+    rule_compliance_validations:
+      - check: >
+          The agent assigns exactly one label to each of the three items and does not
+          leave any item without a classification.

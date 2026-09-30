@@ -1,0 +1,33 @@
+id: 05_Hallucination_NoFabricatedThemes
+description: >
+  Checks that the agent does not fabricate themes, topics, or details in the
+  summary that are absent from the submitted feedback.
+tags:
+  - hallucination
+  - correctness
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a feedback analyst. You submit a single, narrowly scoped feedback
+        item about pricing only.
+        Known information: the feedback text is "The pricing is too high for small
+        businesses."
+        Unknown information: you do not know the exact summary wording.
+        Submit the feedback and review whether the summary introduces any topic not
+        mentioned in the text — such as support quality, delivery, or product features.
+      initial_message: >
+        Please analyse this feedback: "The pricing is too high for small businesses."
+    max_turns: 3
+    agent_response_validations:
+      - check: >
+          The CLASSIFICATIONS section labels the pricing feedback as negative.
+      - check: >
+          The SUMMARY section only discusses the concern about pricing being too high
+          for small businesses and does not introduce unrelated themes such as
+          delivery, support quality, product features, or any other topic not mentioned
+          in the feedback.
+    rule_compliance_validations:
+      - check: >
+          The agent does not include in its summary any claim or theme that was not
+          present in the submitted feedback text.

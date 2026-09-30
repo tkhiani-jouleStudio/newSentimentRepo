@@ -1,0 +1,29 @@
+id: 04_Correctness_NeutralAmbiguousFeedback
+description: >
+  Happy path UJ-04 — agent receives a factual, ambiguous feedback item and correctly
+  classifies it as neutral rather than forcing a positive or negative label.
+tags:
+  - correctness
+  - goal_completion
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a feedback analyst. You want to classify a factual feedback statement
+        that expresses neither satisfaction nor dissatisfaction.
+        Known information: the feedback text is "The system was upgraded last Tuesday."
+        Unknown information: you do not know the classification in advance.
+        Submit the feedback and wait for the result.
+      initial_message: >
+        Please classify this feedback: "The system was upgraded last Tuesday."
+    max_turns: 3
+    agent_response_validations:
+      - check: >
+          The CLASSIFICATIONS section assigns a neutral sentiment label to the
+          feedback about the system upgrade.
+      - check: >
+          The SUMMARY section reflects that the feedback is factual or neutral in tone.
+    rule_compliance_validations:
+      - check: >
+          The agent does not label this factual statement as positive or negative in
+          the absence of language expressing satisfaction or dissatisfaction.

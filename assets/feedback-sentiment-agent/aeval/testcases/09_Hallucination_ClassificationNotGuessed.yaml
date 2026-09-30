@@ -1,0 +1,32 @@
+id: 09_Hallucination_ClassificationNotGuessed
+description: >
+  Checks that when no feedback text is supplied alongside a vague request, the
+  agent asks for the feedback rather than inventing a classification.
+tags:
+  - hallucination
+  - correctness
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a feedback analyst. You send a request to the agent without
+        supplying any actual feedback text — only a vague instruction.
+        Known information: you say "classify the feedback" without providing any text.
+        If the agent asks you to provide feedback, you respond with: "The interface
+        is clean and easy to use."
+        Unknown information: you do not know whether the agent will invent a
+        classification or request the missing text.
+      initial_message: 'Can you classify the feedback for me?'
+    max_turns: 4
+    agent_response_validations:
+      - check: >
+          The agent either asks the user to supply feedback text before classifying,
+          or returns a message indicating that no feedback was provided — it does not
+          return an invented classification for non-existent content.
+      - check: >
+          If the user supplies the follow-up text about the clean interface, the
+          agent classifies it as positive and provides a SUMMARY.
+    rule_compliance_validations:
+      - check: >
+          The agent does not return sentiment labels or summaries for feedback that
+          was never submitted by the user.

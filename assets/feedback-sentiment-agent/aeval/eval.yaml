@@ -1,0 +1,17 @@
+requirements:
+  agent_response_requirements:
+    - 'The agent returns a classification — positive, negative, or neutral — for each submitted feedback item, accompanied by a brief reason referencing the content of that item.'
+    - 'The agent returns a SUMMARY section that highlights the key themes and the overall sentiment trend across all submitted feedback items.'
+    - 'The agent returns structured output containing a CLASSIFICATIONS section with per-item labels and reasons, and a SUMMARY section, in a consistent format.'
+    - 'When the submitted input is empty or contains no parseable feedback, the agent returns an informative error message and does not return a CLASSIFICATIONS or SUMMARY section.'
+    - '[BUSINESS_METRIC: Sentiment classification accuracy] When classifying feedback, the agent assigns exactly one label — positive, negative, or neutral — per item, targeting 96% accuracy at go-live.'
+    - 'When feedback contains clearly positive language (praise, satisfaction), the agent labels it positive; clearly negative language (complaints, dissatisfaction), negative; and factual, mixed, or ambiguous content, neutral.'
+
+  tool_requirements: []
+
+  rule_compliance_requirements:
+    - 'WHEN the user submits empty input or text that cannot be parsed as feedback, the agent MUST return an error message and MUST NOT return classifications or summaries based on fabricated or invented content.'
+    - 'WHEN feedback is factual, mixed, or does not clearly express positive or negative sentiment, the agent MUST classify it as neutral rather than forcing a stronger label.'
+    - 'WHEN the agent produces a SUMMARY section, it MUST base the summary only on the submitted feedback items and MUST NOT introduce topics or themes absent from the input.'
+    - 'The agent MUST NOT fabricate, invent, or modify the content of submitted feedback — it MUST process only the text explicitly provided by the user.'
+    - 'WHEN the agent returns a classification for a feedback item, it MUST assign exactly one label — positive, negative, or neutral — and MUST NOT return multiple labels or omit a classification for any submitted item.'
